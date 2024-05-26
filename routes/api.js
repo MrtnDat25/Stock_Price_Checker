@@ -6,16 +6,18 @@ let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 module.exports = function (app) {
   let uri ="mongodb+srv://datgrb123456:datgrb123456loL@cluster0.lztogta.mongodb.net/stock-price-checker?retryWrites=true&w=majority&appName=Cluster0";
-  mongoose.connect(uri).then(
+  mongoose.connect(uri)
+        .then(
     () => {
       console.log("Database connection established!");
     },
     (err) => {
       console.error("Database connection error:", err);
     }
-  );
+            );
 
-  let stockSchema = new mongoose.Schema({
+  let stockSchema = new mongoose.Schema
+  ({
     name: { type: String, required: true },
     price: { type: Number, default: 0 },
     likes: { type: Number, default: 0 },
@@ -32,7 +34,8 @@ module.exports = function (app) {
     let twoStocks = false;
 
     /* Output Response */
-    let outputResponse = () => {
+    let outputResponse = () =>
+    {
       return res.json(responseObject);
     };
 
@@ -63,7 +66,7 @@ module.exports = function (app) {
           stockDocument['ips'] &&
           stockDocument['ips'].includes(req.ip)
         ) {
-          return res.json("Error: Only 1 Like per IP Allowed");
+          return res.json("Only 1 Like per IP Allowed!!");
         } else {
           const documentUpdate = { $inc: { likes: 1 }, $push: { ips: req.ip } };
           await nextStep(stockName, documentUpdate, getPrice);
@@ -77,9 +80,7 @@ module.exports = function (app) {
     let getPrice = (stockDocument) => {
       let xhr = new XMLHttpRequest();
       let requestUrl =
-        "https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/" +
-        stockDocument["name"] +
-        "/quote";
+        "https://stock-price-checker-proxy.freecodecamp.rocks/v1/stock/" + stockDocument["name"] + "/quote";
       xhr.open("GET", requestUrl, true);
       xhr.onload = () => {
         let apiResponse = JSON.parse(xhr.responseText);
